@@ -36,6 +36,10 @@ jobs:
           cp -r YouTubeQueueCompanionPro/. .
           rm -rf YouTubeQueueCompanionPro
 
+      - name: Fix Kotlin source
+        run: |
+          sed -i 's/val candidate = .*/val candidate = raw.trim().split(" ").firstOrNull { it.contains("youtu") } ?: return null/' app/src/main/java/com/example/youtubequeue/QueueStore.kt
+
       - name: Configure AndroidX
         run: |
           echo "android.useAndroidX=true" >> gradle.properties
