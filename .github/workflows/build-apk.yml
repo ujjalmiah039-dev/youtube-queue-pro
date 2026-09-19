@@ -36,16 +36,32 @@ jobs:
           cp -r YouTubeQueueCompanionPro/. .
           rm -rf YouTubeQueueCompanionPro
 
+      - name: Configure AndroidX
+        run: |
+          echo "android.useAndroidX=true" >> gradle.properties
+          echo "android.enableJetifier=true" >> gradle.properties
+
+      - name: Configure Java and Kotlin JVM 17
+        run: |
+          cat >> app/build.gradle.kts <<'EOF'
+
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+          }
+
+          kotlin {
+              jvmToolchain(17)
+          }
+          EOF
+
       - name: Install Gradle
         run: |
           wget -q https://services.gradle.org/distributions/gradle-8.9-bin.zip
           unzip -q gradle-8.9-bin.zip
           echo "$PWD/gradle-8.9/bin" >> "$GITHUB_PATH"
-
-      - name: Configure AndroidX
-        run: |
-          echo "android.useAndroidX=true" >> gradle.properties
-          echo "android.enableJetifier=true" >> gradle.properties
 
       - name: Build APK
         run: |
